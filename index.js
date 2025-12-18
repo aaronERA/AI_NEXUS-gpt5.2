@@ -3,16 +3,14 @@ import dotenv from 'dotenv';
 import { Client, GatewayIntentBits } from 'discord.js';
 import OpenAI from 'openai';
 
-dotenv.config();
+dotenv.config(); // ✅ Make sure this is correct
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Keep Render alive
 app.get('/', (req, res) => res.send('Bot is running!'));
 app.listen(PORT, () => console.log(`Web service listening on ${PORT}`));
 
-// Discord bot setup
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
