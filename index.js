@@ -1,22 +1,34 @@
-import { Client, GatewayIntentBits } from "discord.js";
-import OpenAI from "openai";
-import dotenv from "dotenv";
+import express from 'express';
+import dotenv from 'dotenv';
+import { Client, GatewayIntentBits } from 'discord.js';
+import OpenAI from 'openai';
+
 dotenv.config();
 
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Keep Render alive
+app.get('/', (req, res) => res.send('Bot is running!'));
+app.listen(PORT, () => console.log(`Web service listening on ${PORT}`));
+
+// Discord bot setup
 const client = new Client({
-  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent],
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent
+  ]
 });
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-client.on("messageCreate", async (msg) => {
+client.on('messageCreate', async (msg) => {
   if (msg.author.bot) return;
 
   const response = await openai.chat.completions.create({
-    model: "gpt-4o",
-    messages: [{ role: "user", content: msg.content }],
+    model: 'gpt-4',
+    messages: [{ role: 'user', content: msg.content }]
   });
 
   msg.reply(response.choices[0].message.content);
